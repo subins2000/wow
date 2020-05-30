@@ -4,7 +4,7 @@ const User = require('./User')
 
 const measureRainSchema = mongoose.Schema({
   uid: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
   measurement: {
