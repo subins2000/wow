@@ -1,16 +1,14 @@
 require('dotenv').config()
 
-const MongoClient = require('mongodb').MongoClient
+const mongoose = require('mongoose')
+const User = require('./models/User')
 
 const client = new MongoClient(process.env.DB_URL, { useNewUrlParser: true })
 
 function connect () {
-  client.connect(err => {
-    console.log(err)
-
-    const collection = client.db('wow').collection('users')
-    // perform actions on the collection object
-    client.close()
+  mongoose.connect(process.env.MONGODB_URL, {
+    useNewUrlParser: true,
+    useCreateIndex: true
   })
 }
 
