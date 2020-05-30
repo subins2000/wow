@@ -26,12 +26,12 @@ const userSchema = mongoose.Schema({
     required: true,
     minLength: 7
   },
-  tokens: [{
-    token: {
-      type: String,
-      required: true
-    }
-  }]
+  token: {
+    type: String
+  },
+  name: {
+    type: String
+  }
 })
 
 userSchema.pre('save', async function (next) {
@@ -50,7 +50,7 @@ userSchema.methods.generateAuthToken = async function () {
     _id: user._id,
     expiresIn: '30d'
   }, process.env.JWT_KEY)
-  user.tokens = user.tokens.concat({ token })
+  user.token = token
   await user.save()
   return token
 }
