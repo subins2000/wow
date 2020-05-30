@@ -2,6 +2,7 @@ var express = require('express')
 var router = express.Router()
 
 const User = require('../models/User')
+const auth = require('../middleware/auth')
 
 router.post('/register', async (req, res, next) => {
   try {
@@ -30,6 +31,14 @@ router.post('/login', async (req, res) => {
       error: error.message
     })
   }
+})
+
+router.get('/info', auth, async (req, res) => {
+  res.send({
+    username: req.user.username,
+    email: req.user.email,
+    name: req.user.name
+  })
 })
 
 module.exports = router
