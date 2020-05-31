@@ -16,6 +16,18 @@ const schema = mongoose.Schema({
   lng: {
     type: Number,
     required: true
+  },
+  district: {
+    type: String,
+    required: true
+  },
+  state: {
+    type: String,
+    required: true
+  },
+  country: {
+    type: String,
+    required: true
   }
 })
 schema.pre('save', async function (next) {
