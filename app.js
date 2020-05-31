@@ -10,7 +10,11 @@ var rainRouter = require('./src/routes/rain')
 var gaugeRouter = require('./src/routes/gauge')
 
 const db = require('./src/db')
-var app = express()
+
+const app = express()
+const cors = require('cors')
+
+app.use(cors())
 
 // view engine setup
 app.set('views', path.join(__dirname, 'src', 'views'))
@@ -25,7 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use('/', indexRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/rain', rainRouter)
-app.use('/api/gauge',gaugeRouter)
+app.use('/api/gauge', gaugeRouter)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

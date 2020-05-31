@@ -3,7 +3,7 @@ const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
-const userSchema = mongoose.Schema({
+const schema = mongoose.Schema({
   username: {
     type: String,
     required: true,
@@ -34,7 +34,7 @@ const userSchema = mongoose.Schema({
   }
 })
 
-userSchema.pre('save', async function (next) {
+schema.pre('save', async function (next) {
   // Hash the password before saving the user model
   const user = this
   if (user.isModified('password')) {
@@ -43,7 +43,7 @@ userSchema.pre('save', async function (next) {
   next()
 })
 
-userSchema.methods.generateAuthToken = async function () {
+schema.methods.generateAuthToken = async function () {
   // Generate an auth token for the user
   const user = this
   const token = jwt.sign({
@@ -55,7 +55,7 @@ userSchema.methods.generateAuthToken = async function () {
   return token
 }
 
-userSchema.statics.findByCredentials = async (userIdentifier, password) => {
+schema.statics.findByCredentials = async (userIdentifier, password) => {
   // Search for a user by email or username and password.
   const user = await User.findOne({ username: userIdentifier }) || await User.findOne({ email: userIdentifier })
 
@@ -71,6 +71,6 @@ userSchema.statics.findByCredentials = async (userIdentifier, password) => {
   return user
 }
 
-const User = mongoose.model('User', userSchema)
+const User = mongoose.model('User', schema)
 
 module.exports = User

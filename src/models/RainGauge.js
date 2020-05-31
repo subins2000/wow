@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const gaugeSchema = mongoose.Schema({
+const schema = mongoose.Schema({
   name: {
     type: String,
     required: true
@@ -18,11 +18,11 @@ const gaugeSchema = mongoose.Schema({
     required: true
   }
 })
-gaugeSchema.pre('save', async function (next) {
+schema.pre('save', async function (next) {
   // TODO: check if user has already submitted today. Better do this in route/controller
   next()
 })
 
-const GaugeData = mongoose.model('GaugeData', gaugeSchema)
+const RainGauge = mongoose.model('RainGauge', schema)
 
-module.exports = GaugeData
+module.exports = RainGauge

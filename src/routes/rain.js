@@ -1,7 +1,7 @@
 var express = require('express')
 var router = express.Router()
 
-const Rain = require('../models/MeasureRain')
+const Rain = require('../models/RainMeasure')
 const auth = require('../middleware/auth')
 // /api/rain/add
 // /api/rain/get?pincode=
