@@ -13,6 +13,9 @@ const schema = mongoose.Schema({
   posted: {
     type: Date,
     default: Date.now
+  },
+  notes: {
+    type: String
   }
 })
 
