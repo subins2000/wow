@@ -46,4 +46,8 @@ router.get('/info', auth, async (req, res) => {
   })
 })
 
+router.get('/check', auth, async (req, res) => {
+  res.status(200)
+})
+
 module.exports = router
