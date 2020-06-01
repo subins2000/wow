@@ -3,6 +3,7 @@ var router = express.Router()
 
 const Gauge = require('../models/RainGauge')
 const auth = require('../middleware/auth')
+const Rmeasure = require('../models/RainMeasure')
 
 router.post('/add', auth, async (req, res) => {
   try {
@@ -21,7 +22,25 @@ router.post('/add', auth, async (req, res) => {
 router.get('/getAll', async (req, res) => {
   try {
     const gauge = await Gauge.find()
-    res.status(200).send(gauge)
+    //Wait
+    gauge.forEach(async (item) => {
+      console.log(item._id)
+      const rmes = await Rmeasure.find({ "gid": item._id })
+      var sum = 0
+      var avg = 0.0
+      rmes.forEach((subin) => {
+        //sum += 
+        if  (Number.isInteger(subin.measurement)){
+          sum+=subin.measurement
+        }
+      })
+      if (rmes.length>0){
+        avg = sum / rmes.length
+        console.log(avg)
+      }
+      
+    })
+    res.status(200).send(avg)
   } catch (error) {
     res.status(400).send(error)
     console.log(error)
@@ -40,3 +59,5 @@ router.get('/getMine', auth, async (req, res) => {
 })
 
 module.exports = router
+
+//Ithaan sambhavam
