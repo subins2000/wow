@@ -31,6 +31,9 @@ const schema = mongoose.Schema({
   },
   name: {
     type: String
+  },
+  place: {
+    type: String
   }
 })
 
