@@ -1,6 +1,11 @@
 const mongoose = require('mongoose')
 
 const schema = mongoose.Schema({
+  uid: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   name: {
     type: String,
     required: true
@@ -17,7 +22,7 @@ const schema = mongoose.Schema({
     type: Number,
     required: true
   },
-  district: {
+  pincode: {
     type: String,
     required: true
   },
