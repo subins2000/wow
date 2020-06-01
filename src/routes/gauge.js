@@ -3,14 +3,14 @@ var router = express.Router()
 
 const Gauge = require('../models/RainGauge')
 const auth = require('../middleware/auth')
-const Rmeasure = require('../models/RainMeasure')
+const RainMeasure = require('../models/RainMeasure')
 
 router.post('/add', auth, async (req, res) => {
   try {
-    req.body.uid = req.user.id
+    req.body.uid = req.user._id
     const gaugeModel = new Gauge(req.body)
     const gauge = await gaugeModel.save()
-    res.status(200).send({
+    res.status(201).send({
       id: gauge._id
     })
   } catch (error) {
@@ -21,26 +21,35 @@ router.post('/add', auth, async (req, res) => {
 
 router.get('/getAll', async (req, res) => {
   try {
+    const jan1ThisYear = new Date()
+    jan1ThisYear.setUTCDate(1)
+    jan1ThisYear.setUTCMonth(0)
+    jan1ThisYear.setUTCHours(0)
+    jan1ThisYear.setUTCMinutes = 0
+    jan1ThisYear.setUTCMilliseconds = 0
+
     const gauge = await Gauge.find()
-    //Wait
+    // Wait
     gauge.forEach(async (item) => {
-      console.log(item._id)
-      const rmes = await Rmeasure.find({ "gid": item._id })
-      var sum = 0
-      var avg = 0.0
-      rmes.forEach((subin) => {
-        //sum += 
-        if  (Number.isInteger(subin.measurement)){
-          sum+=subin.measurement
+      const rmes = await RainMeasure.find({
+        gid: item._id,
+        posted: {
+          $gte: jan1ThisYear
         }
       })
-      if (rmes.length>0){
+      var sum = 0
+      var avg = 0.0
+      rmes.forEach((rme) => {
+        if (Number.isInteger(rme.measurement)) {
+          sum += rme.measurement
+        }
+      })
+      if (rmes.length > 0) {
         avg = sum / rmes.length
-        console.log(avg)
       }
-      
+      item.avgYear = avg
     })
-    res.status(200).send(avg)
+    res.status(200).send(gauge)
   } catch (error) {
     res.status(400).send(error)
     console.log(error)
@@ -50,7 +59,7 @@ router.get('/getAll', async (req, res) => {
 router.get('/getMine', auth, async (req, res) => {
   try {
     const gauge = await Gauge.find({
-      uid: req.user.id
+      uid: req.user._id
     })
     res.status(200).send(gauge)
   } catch (error) {
@@ -60,4 +69,4 @@ router.get('/getMine', auth, async (req, res) => {
 
 module.exports = router
 
-//Ithaan sambhavam
+// Ithaan sambhavam
