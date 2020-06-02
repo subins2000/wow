@@ -28,28 +28,39 @@ router.get('/getAll', async (req, res) => {
     jan1ThisYear.setUTCMinutes = 0
     jan1ThisYear.setUTCMilliseconds = 0
 
-    const gauge = await Gauge.find()
-    // Wait
-    gauge.forEach(async (item) => {
-      const rmes = await RainMeasure.find({
-        gid: item._id,
-        posted: {
-          $gte: jan1ThisYear
+    await RainMeasure.aggregate([
+      {
+        $match: {
+          measurement: {
+            $gte: 0
+          },
+          posted: {
+            $gte: jan1ThisYear
+          }
         }
-      })
-      var sum = 0
-      var avg = 0.0
-      rmes.forEach((rme) => {
-        if (Number.isInteger(rme.measurement)) {
-          sum += rme.measurement
+      },
+      {
+        $group: {
+          _id: '$gid',
+          avgYear: { $avg: '$measurement' }
         }
-      })
-      if (rmes.length > 0) {
-        avg = sum / rmes.length
       }
-      item.avgYear = avg
+    ], async (error, gauges) => {
+      if (error) {
+        throw new Error({ error })
+      }
+
+      let gaugeInfo
+      for (const k in gauges) {
+        gaugeInfo = await Gauge.findOne({
+          _id: gauges[k]._id
+        }).lean()
+
+        gauges[k] = { ...gauges[k], ...gaugeInfo }
+      }
+
+      res.status(200).send(gauges)
     })
-    res.status(200).send(gauge)
   } catch (error) {
     res.status(400).send(error)
     console.log(error)
