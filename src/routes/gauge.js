@@ -69,6 +69,7 @@ router.get('/getAll', async (req, res) => {
 
 router.get('/getMine', auth, async (req, res) => {
   try {
+    // TODO: add latest measurement
     const gauge = await Gauge.find({
       uid: req.user._id
     })
@@ -79,5 +80,3 @@ router.get('/getMine', auth, async (req, res) => {
 })
 
 module.exports = router
-
-// Ithaan sambhavam
