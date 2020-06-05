@@ -6,8 +6,17 @@ const auth = require('../middleware/auth')
 
 router.post('/add', auth, async (req, res) => {
   try {
-    const rainModel = new RainMeasure(req.body)
-    console.log(req.body)
+    if (req.body.measurement === '0') {
+      req.body.measured = '0'
+    }
+
+    const rainModel = new RainMeasure({
+      gid: req.body.gid,
+      measurement: req.body.measurement,
+      measured: req.body.measured,
+      notes: req.body.notes
+    })
+
     const rain = await rainModel.save()
     res.status(200).send({
       id: rain._id

@@ -10,6 +10,10 @@ const schema = mongoose.Schema({
   measurement: {
     type: Number
   },
+  measured: {
+    type: Date,
+    required: true
+  },
   posted: {
     type: Date,
     default: Date.now
